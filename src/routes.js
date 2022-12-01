@@ -23,23 +23,21 @@ import Icons from "views/Icons.js";
 import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
+import MedicalHistory from "views/MedicalHistory";
+import MedicalDiary from "views/MedicalDiary";
+import CatheterTransaction from "views/CatheterTransaction";
+import CreateCathere from "views/CreateCathere";
+import Testmonial from "views/Testmonial";
 
 const dashboardRoutes = [
-  {
-    upgrade: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "nc-icon nc-alien-33",
-    component: Upgrade,
-    layout: "/admin"
-  },
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
-    component: Dashboard,
-    layout: "/admin"
-  },
+  // {
+  //   upgrade: true,
+  //   path: "/upgrade",
+  //   name: "Upgrade to PRO",
+  //   icon: "nc-icon nc-alien-33",
+  //   component: Upgrade,
+  //   layout: "/admin"
+  // },
   {
     path: "/user",
     name: "User Profile",
@@ -47,6 +45,37 @@ const dashboardRoutes = [
     component: UserProfile,
     layout: "/admin"
   },
+ 
+  {
+    path: "/Medical Diary",
+    name: "Medical Diary",
+    icon: "nc-icon nc-chart-pie-35",
+    component: MedicalDiary,
+    layout: "/admin"
+  },
+  {
+    path: "/CreateCathere",
+    name: "Create Cathere",
+    icon: "nc-icon nc-chart-pie-35",
+    component: CreateCathere,
+    layout: "/admin"
+  },
+  {
+    path: "/CatheterTransaction",
+    name: "Catheter Transaction",
+    icon: "nc-icon nc-chart-pie-35",
+    component: CatheterTransaction,
+    layout: "/admin"
+  },
+  {
+    path: "/Testmonial",
+    name: "Testmonial",
+    icon: "nc-icon nc-chart-pie-35",
+    component: Testmonial,
+    layout: "/admin"
+  },
+ 
+ 
   {
     path: "/table",
     name: "Table List",
@@ -81,7 +110,14 @@ const dashboardRoutes = [
     icon: "nc-icon nc-bell-55",
     component: Notifications,
     layout: "/admin"
-  }
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "nc-icon nc-chart-pie-35",
+    component: Dashboard,
+    layout: "/admin"
+  },
 ];
 
 export default dashboardRoutes;
