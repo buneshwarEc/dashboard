@@ -28,7 +28,6 @@ import MedicalDiary from "views/MedicalDiary";
 import CatheterTransaction from "views/CatheterTransaction";
 import CreateCathere from "views/CreateCathere";
 import Testmonial from "views/Testmonial";
-import Login from "components/Login/Login";
 
 const dashboardRoutes = [
   // {

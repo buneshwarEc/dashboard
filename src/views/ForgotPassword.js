@@ -1,37 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-
+import React, { useRef, useState } from "react";
 import {
   Col,
-  Button,
   Row,
   Container,
-  Card,
+  Button,
   Form,
+  Card,
   Image,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-const Login = () => {
+const ForgotPassword = () => {
   const emailRef = useRef();
-  const errRef = useRef();
-
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
-
-  const handleSubmit = (e) => {
-    // e.preventDefault();
-    console.log("email: ", email);
-  };
+  const handleSubmit = () => {};
 
   return (
-    <div>
+    <>
       <Container>
-        <Row className="vh-100 d-flex justify-content-center align-items-center">
+        <Row className="vh-100 d-flex justify-content-center align-items-center py-2">
           <Col md={8} lg={6} xs={12}>
             <div className="border border-3 border-primary"></div>
             <Card className="shadow ">
@@ -39,61 +28,44 @@ const Login = () => {
                 <div className="mb-3 mt-md-4">
                   <div className="d-flex justify-content-center mb-3 ">
                     <Image
-                      src={require("../../assets/img/logo.jpg")}
+                      src={require("../assets/img/logo.jpg")}
                       className="img-fluid"
                       style={{ width: "20rem" }}
                     />
                   </div>
                   <div className="mb-3 mx-3">
-                    <Form>
+                    <Form onSubmit={handleSubmit}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className="text-center">
                           Email address
                         </Form.Label>
                         <Form.Control
                           type="email"
-                          id="email"
-                          autoComplete="off"
                           ref={emailRef}
+                          autoComplete="off"
                           required
+                          value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Enter email"
+                          isInvalid={!!emailError}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          {emailError}
+                        </Form.Control.Feedback>
                       </Form.Group>
 
-                      <Form.Group
-                        className="mb-3"
-                        controlId="formBasicPassword"
-                      >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                          required
-                          type="password"
-                          placeholder="Password"
-                        />
-                      </Form.Group>
-                      <Form.Group
-                        className="mb-3"
-                        controlId="formBasicCheckbox"
-                      >
-                        <p className="small d-flex justify-content-end">
-                          <a className="text-primary" href="#!">
-                            Forgot password?
-                          </a>
-                        </p>
-                      </Form.Group>
                       <div className=" d-flex justify-content-center align-items-center ">
-                        <Button variant="primary" type="button">
-                          Login
+                        <Button variant="primary" type="submit">
+                          Submit
                         </Button>
                       </div>
                     </Form>
                     <div className="mt-3">
                       <p className="mb-0  text-center">
                         Don't have an account?{" "}
-                        <a href="{''}" className="text-primary fw-bold">
+                        <Link to="/register" className="text-primary fw-bold">
                           Sign Up
-                        </a>
+                        </Link>
                       </p>
                     </div>
                   </div>
@@ -103,8 +75,8 @@ const Login = () => {
           </Col>
         </Row>
       </Container>
-    </div>
+    </>
   );
 };
 
-export default Login;
+export default ForgotPassword;
