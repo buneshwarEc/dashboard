@@ -28,6 +28,7 @@ import MedicalDiary from "views/MedicalDiary";
 import CatheterTransaction from "views/CatheterTransaction";
 import CreateCathere from "views/CreateCathere";
 import Testmonial from "views/Testmonial";
+import Login from "components/Login/Login";
 
 const dashboardRoutes = [
   // {
@@ -43,80 +44,79 @@ const dashboardRoutes = [
     name: "User Profile",
     icon: "nc-icon nc-circle-09",
     component: UserProfile,
-    layout: "/admin"
+    layout: "/admin",
   },
- 
+
   {
     path: "/Medical Diary",
     name: "Medical Diary",
     icon: "nc-icon nc-chart-pie-35",
     component: MedicalDiary,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/CreateCathere",
     name: "Create Cathere",
     icon: "nc-icon nc-chart-pie-35",
     component: CreateCathere,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/CatheterTransaction",
     name: "Catheter Transaction",
     icon: "nc-icon nc-chart-pie-35",
     component: CatheterTransaction,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/Testmonial",
     name: "Testmonial",
     icon: "nc-icon nc-chart-pie-35",
     component: Testmonial,
-    layout: "/admin"
+    layout: "/admin",
   },
- 
- 
+
   {
     path: "/table",
     name: "Table List",
     icon: "nc-icon nc-notes",
     component: TableList,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/typography",
     name: "Typography",
     icon: "nc-icon nc-paper-2",
     component: Typography,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-atom",
     component: Icons,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/maps",
     name: "Maps",
     icon: "nc-icon nc-pin-3",
     component: Maps,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/notifications",
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     icon: "nc-icon nc-chart-pie-35",
     component: Dashboard,
-    layout: "/admin"
+    layout: "/admin",
   },
 ];
 
