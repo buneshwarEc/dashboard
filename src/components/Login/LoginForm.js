@@ -6,57 +6,49 @@ const LoginForm = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [loginDetails, setLoginDetails] = useState({
+    email: "",
+    password: "",
+  });
+  const [loginDetailsError, setLoginDetailsError] = useState({
+    emailError: "",
+    passwordError: "",
+  });
 
   useEffect(() => {
     emailRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    emailError && setEmailError("");
-    passwordError && setPasswordError("");
-  }, [email, password]);
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setLoginDetails({ ...loginDetails, [name]: value });
+    setLoginDetailsError({ ...loginDetailsError, [name + "Error"]: "" });
+  };
 
-  useEffect(() => {
-    emailError && emailRef.current.focus();
-    passwordError && passwordRef.current.focus();
-  }, [emailError, passwordError]);
-
-  const validateInput = () => {
+  const validateForm = () => {
     let emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (email === "") {
-      setEmailError("Email is required");
-      return;
-    }
+    const newErrors = {};
+    const { email, password } = loginDetails;
+    ``;
     if (!email.match(emailFormat)) {
-      setEmailError("Please enter a valid email");
-      return;
-    }
-    if (password === "") {
-      setPasswordError("Password is required");
-      return;
+      newErrors.emailError = "Please enter a valid email";
     }
     if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      return;
+      newErrors.passwordError = "Password must be at least 8 characters";
     }
-    setIsValid(true);
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateInput();
-    if (isValid) {
-      console.log("email: ", email);
-      console.log("password:", password);
-      setEmail("");
-      setPassword("");
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setLoginDetailsError(newErrors);
+      return;
     }
+    console.log("Login details: ", loginDetails);
   };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -66,13 +58,14 @@ const LoginForm = () => {
           ref={emailRef}
           autoComplete="off"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={loginDetails.email}
+          onChange={handleInput}
           placeholder="Enter email"
-          isInvalid={!!emailError}
+          isInvalid={!!loginDetailsError.emailError}
         />
         <Form.Control.Feedback type="invalid">
-          {emailError}
+          {loginDetailsError.emailError}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -82,13 +75,14 @@ const LoginForm = () => {
           type="password"
           ref={passwordRef}
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={loginDetails.password}
+          onChange={handleInput}
           placeholder="Password"
-          isInvalid={!!passwordError}
+          isInvalid={!!loginDetailsError.passwordError}
         />
         <Form.Control.Feedback type="invalid">
-          {passwordError}
+          {loginDetailsError.passwordError}
         </Form.Control.Feedback>
       </Form.Group>
       <p className="small d-flex justify-content-end">

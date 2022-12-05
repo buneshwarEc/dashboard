@@ -3,75 +3,75 @@ import { Button, Form } from "react-bootstrap";
 
 const RegisterForm = () => {
   const userNameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [userNameError, setUserNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [userDetailsError, setUserDetailsError] = useState({
+    userNameError: "",
+    emailError: "",
+    passwordError: "",
+    confirmPasswordError: "",
+  });
 
   useEffect(() => {
     userNameRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    userNameError && setUserNameError("");
-    emailError && setEmailError("");
-    passwordError && setPasswordError("");
-    confirmPasswordError && setConfirmPasswordError("");
-  }, [email, password, confirmPassword, userName]);
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setUserDetails({ ...userDetails, [name]: value });
+    setUserDetailsError({ ...userDetailsError, [name + "Error"]: "" });
+  };
 
-  useEffect(() => {
-    userNameError && userNameRef.current.focus();
-    emailError && emailRef.current.focus();
-    passwordError && passwordRef.current.focus();
-    confirmPasswordError && confirmPasswordRef.current.focus();
-  }, [emailError, passwordError]);
-
-  const validateInput = () => {
+  const validateForm = () => {
     let emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const newErrors = {};
+    const { userName, email, password, confirmPassword } = userDetails;
+
     if (userName === "") {
-      setUserNameError("Username is required");
+      newErrors.userNameError = "Username is required";
     }
     if (email === "") {
-      setUserNameError("Email is required");
+      newErrors.emailError = "Email is required";
     } else if (!email.match(emailFormat)) {
-      setEmailError("Please enter a valid email");
+      newErrors.emailError = "Please enter a valid email";
     }
     if (password === "") {
-      setPasswordError("Password is required");
+      newErrors.passwordError = "Password is required";
     } else if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
+      newErrors.passwordError = "Password must be at least 8 characters";
     }
     if (confirmPassword === "") {
-      setConfirmPasswordError("Confirm Password is required");
+      newErrors.confirmPasswordError = "Confirm Password is required";
     } else if (confirmPassword !== password) {
-      setConfirmPasswordError("Password and Confirm Password must be same");
-    } else {
-      setIsValid(true);
+      newErrors.confirmPasswordError =
+        "Password and Confirm Password must be same";
     }
+    console.log(newErrors);
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateInput();
-    if (isValid) {
-      console.log("username: ", userName);
-      console.log("email: ", email);
-      console.log("password:", password);
-      setUserName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setUserDetailsError(newErrors);
+      return;
     }
+    console.log("Form Submitted");
+    console.log(userDetails);
+    setUserDetails({
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicUserName">
@@ -81,13 +81,14 @@ const RegisterForm = () => {
           ref={userNameRef}
           autoComplete="off"
           required
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          name="userName"
+          value={userDetails.userName}
+          onChange={handleInput}
           placeholder="Enter Name"
-          isInvalid={!!userNameError}
+          isInvalid={!!userDetailsError.userNameError}
         />
         <Form.Control.Feedback type="invalid">
-          {userNameError}
+          {userDetailsError.userNameError}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -95,16 +96,16 @@ const RegisterForm = () => {
         <Form.Label className="text-center">Email address</Form.Label>
         <Form.Control
           type="email"
-          ref={emailRef}
           autoComplete="off"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={userDetails.email}
+          onChange={handleInput}
           placeholder="Enter email"
-          isInvalid={!!emailError}
+          isInvalid={!!userDetailsError.emailError}
         />
         <Form.Control.Feedback type="invalid">
-          {emailError}
+          {userDetailsError.emailError}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -112,15 +113,15 @@ const RegisterForm = () => {
         <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
-          ref={passwordRef}
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={userDetails.password}
+          onChange={handleInput}
           placeholder="Password"
-          isInvalid={passwordError}
+          isInvalid={!!userDetailsError.passwordError}
         />
         <Form.Control.Feedback type="invalid">
-          {passwordError}
+          {userDetailsError.passwordError}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -128,15 +129,15 @@ const RegisterForm = () => {
         <Form.Label>Confirm Password</Form.Label>
         <Form.Control
           type="password"
-          ref={confirmPasswordRef}
           required
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          name="confirmPassword"
+          value={userDetails.confirmPassword}
+          onChange={handleInput}
           placeholder="Confirm Password"
-          isInvalid={!!confirmPasswordError}
+          isInvalid={!!userDetailsError.confirmPasswordError}
         />
         <Form.Control.Feedback type="invalid">
-          {confirmPasswordError}
+          {userDetailsError.confirmPasswordError}
         </Form.Control.Feedback>
       </Form.Group>
 
