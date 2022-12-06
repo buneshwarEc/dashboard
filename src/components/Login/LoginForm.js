@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { loginAction } from "../../store/Authentication";
 
 const LoginForm = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const dispatch = useDispatch();
 
   const [loginDetails, setLoginDetails] = useState({
     email: "",
@@ -41,12 +44,13 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setLoginDetailsError(newErrors);
-      return;
-    }
-    console.log("Login details: ", loginDetails);
+    // const newErrors = validateForm();
+    // if (Object.keys(newErrors).length > 0) {
+    //   setLoginDetailsError(newErrors);
+    //   return;
+    // }
+    // console.log("Login details: ", loginDetails);
+    dispatch(loginAction(loginDetails));
   };
 
   return (

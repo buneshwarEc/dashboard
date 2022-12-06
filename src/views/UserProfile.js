@@ -1,7 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getUserDetailsAction } from "../store/User";
 
 const User = () => {
+  const data = useSelector((state) => state?.User?.UserDetails?.employee) ?? [];
+  const token = useSelector((state) => state?.Auth?.token);
+
+  const dispatch = useDispatch();
+
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    emailId: "",
+    image: "",
+    mobileNo: "",
+    address: "",
+    city: "",
+    country: "",
+    postalCode: "",
+  });
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  useEffect(() => {
+    if (data && data.length != 0) {
+      setUser({
+        id: data[0].User_Id ?? "",
+        name: data[0].User_Full_Name ?? "",
+        emailId: data[0].Email_Id ?? "",
+        image: data[0].user_image ?? "",
+        mobileNo: data[0].MobileNo ?? "",
+        address: data[0].Address ?? "",
+        city: data[0].City ?? "",
+        country: data[0].Country ?? "",
+        postal_Code: data[0].Postal_Code ?? "",
+      });
+    }
+  }, [data]);
+
+  const getUserDetails = () => {
+    dispatch(getUserDetailsAction(token));
+  };
+
+  const handleFormInput = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdateBtn = (e) => {
+    e.preventDefault();
+    console.log("Update");
+    console.log("User : ", user);
+  };
+
   return (
     <>
       <Container fluid>
@@ -12,7 +66,7 @@ const User = () => {
                 <Card.Title as="h4">Edit Profile</Card.Title>
               </Card.Header>
               <Card.Body>
-                <div className="author d-flex justify-content-center align">
+                <div className="author d-flex justify-content-end justify-content-sm-center  ">
                   {/* <a href="#pablo" onClick={(e) => e.preventDefault()}> */}
                   <figure style={{ position: "relative" }}>
                     <img
@@ -37,32 +91,11 @@ const User = () => {
                         }}
                       />
                     </div> */}
-                    <figcaption class=" title">Mike Andrew</figcaption>
+                    <figcaption className=" title">{user.name}</figcaption>
                   </figure>
                 </div>
-                <Form>
+                <Form onSubmit={handleUpdateBtn}>
                   <Row>
-                    {/* <Col className="pr-1" md="5">
-                      <Form.Group>
-                        <label>Company (disabled)</label>
-                        <Form.Control
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col> */}
-                    {/* <Col className="px-1" md="3">
-                      <Form.Group>
-                        <label>Username</label>
-                        <Form.Control
-                          defaultValue="michael23"
-                          placeholder="Username"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col> */}
                     <Col className="px-2" md="5">
                       <Form.Group>
                         <label htmlFor="exampleInputEmail1">
@@ -71,39 +104,37 @@ const User = () => {
                         <Form.Control
                           placeholder="Email"
                           type="email"
+                          name="emailId"
+                          value={user.emailId ?? ""}
                           disabled={true}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    {/* <Row> */}
-                    {/* <Col className="pr-1" md="6">
-                      <Form.Group>
-                      <label>First Name</label>
-                      <Form.Control
-                      defaultValue="Mike"
-                      placeholder="Company"
-                      type="text"
-                      ></Form.Control>
-                      </Form.Group>
-                    </Col> */}
+
                     <Col className="px-2" md="7">
                       <Form.Group>
-                        <label> Name</label>
+                        <label>Name</label>
                         <Form.Control
                           placeholder="Name"
                           type="text"
+                          name="name"
+                          value={user.name ?? ""}
+                          onChange={handleFormInput}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
                   </Row>
-                  {/* </Row> */}
+
                   <Row>
                     <Col className="px-2" md="12">
                       <Form.Group>
                         <label>Address</label>
                         <Form.Control
-                          placeholder="Home Address"
+                          placeholder="Address"
+                          value={user.address ?? ""}
+                          name="address"
                           type="text"
+                          onChange={handleFormInput}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -114,7 +145,10 @@ const User = () => {
                         <label>City</label>
                         <Form.Control
                           placeholder="City"
+                          value={user.city ?? ""}
+                          name="city"
                           type="text"
+                          onChange={handleFormInput}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -124,6 +158,9 @@ const User = () => {
                         <Form.Control
                           placeholder="Country"
                           type="text"
+                          name="country"
+                          value={user.country ?? ""}
+                          onChange={handleFormInput}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -132,7 +169,10 @@ const User = () => {
                         <label>Postal Code</label>
                         <Form.Control
                           placeholder="ZIP Code"
+                          name="postalCode"
+                          value={user.postalCode ?? ""}
                           type="number"
+                          onChange={handleFormInput}
                         ></Form.Control>
                       </Form.Group>
                     </Col>

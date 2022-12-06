@@ -3,16 +3,19 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
-import login from "./Authentication";
+import Authentication from "./Authentication";
+import User from "./User";
 
 const reducers = combineReducers({
-  Auth: login,
+  Auth: Authentication,
+  User: User,
 });
 
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: [""],
+  version: 1,
+  whitelist: ["Auth"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
