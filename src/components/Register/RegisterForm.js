@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
+import { useDispatch, useSelector } from "react-redux";
+import { RegisterUserAction } from "../../store/Authentication";
+import { getUserRollAction } from "../../store/User";
+
 const RegisterForm = () => {
   const userNameRef = useRef();
+  const userRoleData = useSelector((state) => state?.User?.UserRoll);
 
   const [userDetails, setUserDetails] = useState({
     userName: "",
@@ -17,9 +22,16 @@ const RegisterForm = () => {
     confirmPasswordError: "",
   });
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     userNameRef.current.focus();
+    dispatch(getUserRollAction());
   }, []);
+
+  useEffect(() => {
+    userRoleData.length > 0 && setUserRollId();
+  }, [userRoleData]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -55,6 +67,13 @@ const RegisterForm = () => {
     return newErrors;
   };
 
+  const setUserRollId = () => {
+    const userRoll = userRoleData.filter(
+      (item) => item.User_role === "Patient"
+    );
+    setUserDetails({ ...userDetails, userRoleId: userRoll[0].id });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -62,8 +81,7 @@ const RegisterForm = () => {
       setUserDetailsError(newErrors);
       return;
     }
-    console.log("Form Submitted");
-    console.log(userDetails);
+    dispatch(RegisterUserAction(userDetails));
     setUserDetails({
       userName: "",
       email: "",

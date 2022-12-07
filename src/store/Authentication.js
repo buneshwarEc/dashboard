@@ -5,8 +5,6 @@ import axios from "axios";
 const initialState = {
   isLoggedIn: false,
   token: "",
-  user_role: "",
-  user_email: "",
 };
 
 const Authentication = createSlice({
@@ -39,28 +37,31 @@ const Authentication = createSlice({
   },
 });
 
-export const RegisterAction = (data) => async (dispatch) => {
+export const RegisterUserAction = (data) => async (dispatch) => {
   const configHeader = {
     "Content-Type": "application/json",
   };
 
-  // const apiData = {
-  //   email: data.email,
-  //   password: data.password,
-  //   role: data.role,
-  // };
+  const apiData = {
+    User_Role: data.userRoleId,
+    User_Full_Name: data.userName,
+    Email_Id: data.email,
+    password: data.password,
+  };
+  // console.log("Register data: ", apiData);
 
   try {
     const response = await axios({
-      method: "post",
-      url: API + "user/userregister",
-      data: data,
+      method: "POST",
+      url: `${API}/user/userregister/`,
+      data: apiData,
       headers: configHeader,
     });
     console.log("Register response: ", response);
     dispatch(Register(response.data));
   } catch (error) {
-    console.log("Register error: ", error);
+    // console.log("Register error: ", error?.response.data?.error.Email_Id);
+    alert(error?.response?.data?.error.Email_Id);
   }
 };
 

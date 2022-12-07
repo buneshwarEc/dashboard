@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 import { loginAction } from "../../store/Authentication";
 
 const LoginForm = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const dispatch = useDispatch();
-
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
@@ -17,6 +13,10 @@ const LoginForm = () => {
     emailError: "",
     passwordError: "",
   });
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     emailRef.current.focus();
