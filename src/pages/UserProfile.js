@@ -203,7 +203,8 @@ const User = () => {
                           type="email"
                           name="emailId"
                           value={user.emailId ?? ""}
-                          disabled={true}
+                          plaintext
+                          readOnly
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -216,8 +217,8 @@ const User = () => {
                           type="text"
                           name="name"
                           value={user.name ?? ""}
-                          // onChange={handleFormInput}
-                          disabled={true}
+                          plaintext
+                          readOnly
                         ></Form.Control>
                       </Form.Group>
                     </Col>

@@ -25,6 +25,8 @@ import "./assets/css/animate.min.css";
 import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
 
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";

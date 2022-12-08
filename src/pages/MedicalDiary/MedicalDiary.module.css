@@ -1,0 +1,29 @@
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+}
+
+.imageCardBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+}

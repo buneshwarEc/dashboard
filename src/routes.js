@@ -24,7 +24,7 @@ import Maps from "./pages/Maps.js";
 import Notifications from "./pages/Notifications.js";
 import Upgrade from "./pages/Upgrade.js";
 import MedicalHistory from "./pages/MedicalHistory";
-import MedicalDiary from "./pages/MedicalDiary";
+import MedicalDiary from "./pages/MedicalDiary/MedicalDiary";
 import CatheterTransaction from "./pages/CatheterTransaction";
 import CreateCathere from "./pages/CreateCathere";
 import Testmonial from "./pages/Testmonial";
