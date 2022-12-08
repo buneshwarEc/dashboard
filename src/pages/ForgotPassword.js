@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Col,
   Row,
@@ -15,7 +15,36 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  const handleSubmit = () => {};
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
+
+  const handleInput = (e) => {
+    setEmail(e.target.value);
+    setEmailError("");
+  };
+
+  const validateEmail = () => {
+    let emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if (email === "") {
+      setEmailError("Email is required");
+      return false;
+    }
+    if (!email.match(emailFormat)) {
+      setEmailError("Please enter a valid email");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isValid = validateEmail();
+    if (isValid === false) return;
+    console.log("Email: ", email);
+    setEmail("");
+  };
 
   return (
     <>
@@ -45,7 +74,7 @@ const ForgotPassword = () => {
                           autoComplete="off"
                           required
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={handleInput}
                           placeholder="Enter email"
                           isInvalid={!!emailError}
                         />

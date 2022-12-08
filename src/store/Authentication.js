@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { API } from "../utils/https";
 import axios from "axios";
+
+import { API } from "../utils/https";
 
 const initialState = {
   isLoggedIn: false,
@@ -12,23 +13,18 @@ const Authentication = createSlice({
   initialState: initialState,
   reducers: {
     Login: (state, action) => {
-      console.log("In login action: ", action.payload);
+      // console.log("In login action: ", action.payload);
       state.isLoggedIn = true;
       state.token = action.payload.token;
-      state.user_role = action.payload.user_role;
-      state.user_email = action.payload.user_email;
     },
     Register: (state, action) => {
       console.log("In register action: ", action.payload);
       // state = action.payload;
     },
     Logout: (state, action) => {
-      console.log("In logout action: ", action.payload);
-      // state = action.payload;
+      // console.log("In logout action: ", action.payload);
       state.isLoggedIn = false;
       state.token = "";
-      state.user_role = "";
-      state.user_email = "";
     },
     ForgotPassword: (state, action) => {
       console.log("In forgot password action: ", action.payload);
@@ -59,6 +55,7 @@ export const RegisterUserAction = (data) => async (dispatch) => {
     });
     console.log("Register response: ", response);
     dispatch(Register(response.data));
+    alert("User registered successfully");
   } catch (error) {
     // console.log("Register error: ", error?.response.data?.error.Email_Id);
     alert(error?.response?.data?.error.Email_Id);
@@ -66,7 +63,7 @@ export const RegisterUserAction = (data) => async (dispatch) => {
 };
 
 export const loginAction = (data) => async (dispatch) => {
-  console.log("In login action: ", data);
+  // console.log("In login action: ", data);
 
   const configHeader = {
     "Content-Type": "application/json",
@@ -77,7 +74,7 @@ export const loginAction = (data) => async (dispatch) => {
     password: data.password,
   };
 
-  console.log("Login data: ", data);
+  // console.log("Login data: ", data);
 
   try {
     const res = await axios({
@@ -105,7 +102,6 @@ export const LogoutAction = () => async (dispatch) => {
       url: `${API}/user/logout/`,
       headers: configHeader,
     });
-    console.log("Logout api call: ", res.data);
     dispatch(Logout(res.data));
   } catch (err) {
     console.log("Logout Error : ", err);

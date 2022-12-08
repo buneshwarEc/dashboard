@@ -15,19 +15,19 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
-import UserProfile from "views/UserProfile.js";
-import TableList from "views/TableList.js";
-import Typography from "views/Typography.js";
-import Icons from "views/Icons.js";
-import Maps from "views/Maps.js";
-import Notifications from "views/Notifications.js";
-import Upgrade from "views/Upgrade.js";
-import MedicalHistory from "views/MedicalHistory";
-import MedicalDiary from "views/MedicalDiary";
-import CatheterTransaction from "views/CatheterTransaction";
-import CreateCathere from "views/CreateCathere";
-import Testmonial from "views/Testmonial";
+import Dashboard from "./pages/Dashboard.js";
+import UserProfile from "./pages/UserProfile.js";
+import TableList from "./pages/TableList.js";
+import Typography from "./pages/Typography.js";
+import Icons from "./pages/Icons.js";
+import Maps from "./pages/Maps.js";
+import Notifications from "./pages/Notifications.js";
+import Upgrade from "./pages/Upgrade.js";
+import MedicalHistory from "./pages/MedicalHistory";
+import MedicalDiary from "./pages/MedicalDiary";
+import CatheterTransaction from "./pages/CatheterTransaction";
+import CreateCathere from "./pages/CreateCathere";
+import Testmonial from "./pages/Testmonial";
 
 const dashboardRoutes = [
   // {

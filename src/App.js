@@ -2,10 +2,10 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { useSelector } from "react-redux";
 
-import AdminLayout from "layouts/Admin.js";
-import ForgotPassword from "views/ForgotPassword";
-import Login from "views/Login";
-import Register from "views/Register";
+import AdminLayout from "./layouts/Admin.js";
+import ForgotPassword from "./pages/ForgotPassword";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.Auth.isLoggedIn);

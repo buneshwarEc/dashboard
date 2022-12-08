@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { API } from "../utils/https";
 import axios from "axios";
+
+import { API } from "../utils/https";
 
 const initialState = {
   UserDetails: [],

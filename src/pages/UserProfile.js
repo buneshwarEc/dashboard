@@ -1,4 +1,3 @@
-import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
@@ -10,9 +9,10 @@ import {
   Image,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { API } from "../utils/https";
+import moment from "moment";
 
 import { getUserDetailsAction, updateUserDetailsAction } from "../store/User";
+import { API } from "../utils/https";
 
 const User = () => {
   const [user, setUser] = useState({
@@ -116,18 +116,23 @@ const User = () => {
   const handleUpdateBtn = (e) => {
     e.preventDefault();
     console.log("Update");
-    const updatedData = {
-      // User_Profile_image: user.image,
-      Address: user.address,
-      City: user.city,
-      Country: user.country,
-      Postal_Code: user.postalCode,
-      MobileNo: user.mobileNo,
-      updated_At: moment().format(),
-    };
-    // console.log("Data : ", updatedData);
-    // console.log("IsEdited : ", isEdited);
-    dispatch(updateUserDetailsAction(token, updatedData));
+
+    // post data to server  when Fields are edited
+    let updatedData = {};
+    isEdited.mobileNo &&
+      (updatedData = { ...updatedData, MobileNo: user.mobileNo });
+    isEdited.address &&
+      (updatedData = { ...updatedData, Address: user.address });
+    isEdited.city && (updatedData = { ...updatedData, City: user.city });
+    isEdited.country &&
+      (updatedData = { ...updatedData, Country: user.country });
+    isEdited.postalCode &&
+      (updatedData = { ...updatedData, Postal_Code: user.postalCode });
+    isEdited.image &&
+      (updatedData = { ...updatedData, User_Profile_image: user.image });
+
+    console.log("updatedData", updatedData);
+    // dispatch(updateUserDetailsAction(token, updatedData));
   };
 
   const profilePicSrc = user.updateImage
