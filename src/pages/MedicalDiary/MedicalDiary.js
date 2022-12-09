@@ -22,6 +22,7 @@ const TempDrainData = [
 const MedicalDiary = () => {
   const [selectDrain, setSelectDrain] = useState("Select a Drain");
   const [selectColor, setSelectColor] = useState("Select a Color");
+  const [startDate, setStartDate] = useState(new Date());
 
   const imageInputRef = useRef(null);
 
@@ -41,11 +42,37 @@ const MedicalDiary = () => {
     <Container>
       <Card className={styles.cardContainer}>
         <Row>
+          {/* <Col md="5">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Calendar />
+            </div>
+          </Col> */}
           <Col md="8">
             <div className={styles.formContainer}>
-              <Form>
+              <Form className="p-1">
+                <Row>
+                  <Col md="12" xs={10}>
+                    <Form.Group
+                      controlId="formBasicDate"
+                      className={styles.formGroup}
+                    >
+                      <label>Date</label>
+                      <Form.Control
+                        type="date"
+                        placeholder="Date"
+                        className={styles.formControl}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
                 <Row className="my-2">
-                  <Col xs={10} md={6}>
+                  <Col xs={10} md="12">
                     <DropDown
                       label="Drain"
                       items={TempDrainData}
@@ -53,7 +80,9 @@ const MedicalDiary = () => {
                       selectedItem={selectDrain}
                     />
                   </Col>
-                  <Col xs={10} md={6}>
+                </Row>
+                <Row className="my-2">
+                  <Col xs={10} md="12">
                     <DropDown
                       label="Color"
                       items={TempDrainData}
@@ -62,32 +91,30 @@ const MedicalDiary = () => {
                     />
                   </Col>
                 </Row>
-
                 <Row>
                   <Col md="12" xs={10}>
-                    <Form.Group controlId="formBasicVolume">
-                      <Form.Label>Volume</Form.Label>
+                    <Form.Group
+                      controlId="formBasicVolume"
+                      className={styles.formGroup}
+                    >
+                      <label>Volume</label>
                       <Form.Control
                         type="text"
                         placeholder="Volume"
-                        style={{
-                          borderRadius: "12px",
-                        }}
+                        className={styles.formControl}
                       />
                     </Form.Group>
                   </Col>
                   <Col md="12" xs={10} className="">
                     <Form.Group
                       controlId="formBasicWoundSize"
-                      className="ml-lg-2"
+                      className={[styles.formGroup] + " " + "ml-lg-2"}
                     >
                       <Form.Label>Wound Size</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Wound Size"
-                        style={{
-                          borderRadius: "12px",
-                        }}
+                        className={styles.formControl}
                       />
                     </Form.Group>
                   </Col>
@@ -100,6 +127,7 @@ const MedicalDiary = () => {
               className="card-user"
               style={{
                 border: "none",
+                backgroundColor: "transparent",
               }}
             >
               <Card.Body className={styles.imageCardBody}>
@@ -113,7 +141,7 @@ const MedicalDiary = () => {
                 />
                 <img
                   alt="..."
-                  className="avatar border-gray"
+                  className="p-2 border-gray"
                   src={require("assets/img/faces/face-3.jpg")}
                 />
                 <Button variant="outline-primary" onClick={onAddImage}>

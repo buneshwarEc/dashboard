@@ -11,8 +11,20 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
-import { getUserDetailsAction, updateUserDetailsAction } from "../store/User";
-import { API } from "../utils/https";
+import styles from "./UserProfile.module.css";
+import {
+  getUserDetailsAction,
+  updateUserDetailsAction,
+} from "../../store/User";
+import { API } from "../../utils/https";
+import DropDown from "components/UI/DropDown";
+
+const tempHospitalList = [
+  { id: 1, name: "Hospital 1" },
+  { id: 2, name: "Hospital 2" },
+  { id: 3, name: "Hospital 3" },
+  { id: 4, name: "Hospital 4" },
+];
 
 const User = () => {
   const [user, setUser] = useState({
@@ -21,6 +33,7 @@ const User = () => {
     emailId: "",
     updateImage: "",
     image: "",
+    hospitalName: "",
     mobileNo: "",
     address: "",
     city: "",
@@ -28,6 +41,7 @@ const User = () => {
     postalCode: "",
   });
   const [isEdited, setIsEdited] = useState({
+    hospitalName: false,
     mobileNo: false,
     address: false,
     city: false,
@@ -35,6 +49,7 @@ const User = () => {
     postalCode: false,
     image: false,
   });
+  const [hospitalName, setHospitalName] = useState("Select a Hospital");
 
   const data = useSelector((state) => state?.User?.UserDetails?.employee) ?? [];
   const token = useSelector((state) => state?.Auth?.token);
@@ -139,7 +154,7 @@ const User = () => {
     ? user.updateImage
     : user.image
     ? API + user.image
-    : require("../assets/img/placeholder.jpg");
+    : require("../../assets/img/placeholder.jpg");
 
   // console.log("image", user.image);
 
@@ -148,13 +163,12 @@ const User = () => {
       <Container fluid>
         <Row>
           <Col md="12 ">
-            <Card className="card-user">
+            <Card className={[styles.cardContainer] + " " + "card-user"}>
               <Card.Header>
                 <Card.Title as="h4">Edit Profile</Card.Title>
               </Card.Header>
               <Card.Body>
                 <div className="author d-flex justify-content-end justify-content-sm-center  ">
-                  {/* <a href="#pablo" onClick={(e) => e.preventDefault()}> */}
                   <figure style={{ position: "relative" }}>
                     <input
                       ref={imageInputRef}
@@ -191,14 +205,15 @@ const User = () => {
                     {/* <figcaption className=" title">{user.name}</figcaption> */}
                   </figure>
                 </div>
-                <Form onSubmit={handleUpdateBtn}>
+                <Form className="p-1" onSubmit={handleUpdateBtn}>
                   <Row>
                     <Col className="px-2" md="6">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label htmlFor="exampleInputEmail1">
                           Email address
                         </label>
                         <Form.Control
+                          // className={styles.formControl}
                           placeholder="Email"
                           type="email"
                           name="emailId"
@@ -210,7 +225,7 @@ const User = () => {
                     </Col>
 
                     <Col className="px-2" md="6">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>Name</label>
                         <Form.Control
                           placeholder="Name"
@@ -225,10 +240,50 @@ const User = () => {
                   </Row>
 
                   <Row>
+                    <Col className="px-1" md="5">
+                      <div className="formGroup">
+                        <DropDown
+                          label="Hospital Name"
+                          items={tempHospitalList}
+                          selectedItem={hospitalName}
+                          setSelectedItem={setHospitalName}
+                        />
+                      </div>
+                    </Col>
+                    <Col md="2">
+                      <div
+                        className="formGroup pt-md-4"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          paddingTop: "0.5rem",
+                        }}
+                      >
+                        <p>OR</p>
+                      </div>
+                    </Col>
+                    <Col className="px-1" md="5">
+                      <Form.Group className={styles.formGroup}>
+                        <label>Hospital Name</label>
+                        <Form.Control
+                          className={styles.formControl}
+                          placeholder="Hospital Name"
+                          type="text"
+                          name="hospitalName"
+                          value={user.hospitalName ?? ""}
+                          onChange={handleFormInput}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
+                  <Row>
                     <Col className="px-2" md="8">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>Address</label>
                         <Form.Control
+                          className={styles.formControl}
                           placeholder="Address"
                           value={user.address ?? ""}
                           name="address"
@@ -239,9 +294,10 @@ const User = () => {
                     </Col>
 
                     <Col className="px-2" md="4">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>Mobile No</label>
                         <Form.Control
+                          className={styles.formControl}
                           placeholder="Mobile No"
                           type="number"
                           name="mobileNo"
@@ -253,9 +309,10 @@ const User = () => {
                   </Row>
                   <Row>
                     <Col className="px-2" md="4">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>City</label>
                         <Form.Control
+                          className={styles.formControl}
                           placeholder="City"
                           value={user.city ?? ""}
                           name="city"
@@ -265,9 +322,10 @@ const User = () => {
                       </Form.Group>
                     </Col>
                     <Col className="px-2" md="4">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>Country</label>
                         <Form.Control
+                          className={styles.formControl}
                           placeholder="Country"
                           type="text"
                           name="country"
@@ -277,9 +335,10 @@ const User = () => {
                       </Form.Group>
                     </Col>
                     <Col className="pl-2" md="4">
-                      <Form.Group>
+                      <Form.Group className={styles.formGroup}>
                         <label>Postal Code</label>
                         <Form.Control
+                          className={styles.formControl}
                           placeholder="ZIP Code"
                           name="postalCode"
                           value={user.postalCode ?? ""}

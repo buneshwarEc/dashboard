@@ -1,0 +1,36 @@
+.cardContainer {
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+}
+
+.cameraIconContainer {
+  position: absolute;
+  left: "6.5rem";
+  top: "5rem";
+  z-index: "1";
+}
+
+.cameraIcon {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  font-size: 0.7rem;
+  color: #27252c;
+}
+
+.formControl {
+  width: 100%;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid #e6e6f0;
+  /* background-color: #f8f8fc; */
+}

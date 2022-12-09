@@ -1,6 +1,7 @@
 .dropDown {
   margin: 0 auto;
-  margin-top: 1rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
   /* margin-bottom: 1rem; */
 }
 
@@ -9,7 +10,7 @@
   align-items: center;
   font-size: 0.7rem;
   margin-right: 1em;
-  color: black;
+  color: #27252c;
 }
 
 .dropDownToggle {
@@ -20,10 +21,10 @@
   height: 100%;
   font-size: 0.9rem;
   padding: 0.5em;
+  padding-left: 1rem;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  background-color: transparent;
-  color: black;
+  border: 1px solid #ced4da;
+  background-color: #fff;
 }
 
 .dropDownItem {

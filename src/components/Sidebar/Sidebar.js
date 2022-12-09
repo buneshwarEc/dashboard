@@ -15,12 +15,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
-
 import { Nav } from "react-bootstrap";
 
-import logo from "assets/img/reactlogo.png";
+import styles from "./Sidebar.module.css";
 
 function Sidebar({ color, image, routes }) {
   const location = useLocation();
@@ -28,38 +27,21 @@ function Sidebar({ color, image, routes }) {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
   return (
-    <div className="sidebar" data-image={image} data-color={color}>
-      <div
-        className="sidebar-background"
-        style={{
-          backgroundImage: "url(" + image + ")",
-        }}
-      />
-      <div className="sidebar-wrapper">
-        <div className="logo d-flex align-items-center justify-content-start">
-          {/* <a
-            href="https://www.creative-tim.com?ref=lbd-sidebar"
-            className="simple-text logo-mini mx-1"
-          > */}
-          <div
-            style={{
-              width: "30px",
-              height: "30px",
-            }}
-          >
+    <div className="sidebar" data-color={color}>
+      <div className="sidebar-background" />
+      <div className={[styles.sidebarWrapper] + " sidebar-wrapper"}>
+        <div className="logo">
+          <div className={styles.logoContainer}>
             <img
               src={require("../../assets/img/logo.jpg")}
               alt="..."
               style={{
-                width: "100%",
-                height: "100%",
+                width: "80%",
+                height: "80%",
+                borderRadius: "1rem",
               }}
             />
           </div>
-          {/* </a> */}
-          {/* <a className="simple-text" href="http://www.creative-tim.com">
-            MED DRAIN CARE
-          </a> */}
         </div>
         <Nav>
           {routes.map((prop, key) => {
