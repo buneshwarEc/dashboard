@@ -23,6 +23,57 @@ const MedicalDiary = () => {
   const [selectDrain, setSelectDrain] = useState("Select a Drain");
   const [selectColor, setSelectColor] = useState("Select a Color");
   const [startDate, setStartDate] = useState(new Date());
+  const [medicalDiaryData, setMedicalDiaryData] = useState({
+    date: "yyyy-MM-dd",
+    volume: "",
+    woundSize: "",
+    image: "",
+    uploadedImage: "",
+  });
+  const [medicalDiaryDataError, setMedicalDiaryDataError] = useState({
+    dateError: "",
+    drainError: "",
+    colorError: "",
+    volumeError: "",
+    woundSizeError: "",
+    imageError: "",
+  });
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setMedicalDiaryData({ ...medicalDiaryData, [name]: value });
+    setMedicalDiaryDataError({
+      ...medicalDiaryDataError,
+      [name + "Error"]: "",
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const { date, volume, woundSize } = medicalDiaryData;
+
+    if (date === "yyyy-MM-dd") {
+      newErrors.dateError = "Date is required";
+    }
+    if (selectDrain === "Select a Drain") {
+      newErrors.drainError = "Drain is required";
+    }
+    if (selectColor === "Select a Color") {
+      newErrors.colorError = "Color is required";
+    }
+    if (volume === "") {
+      newErrors.volumeError = "Volume is required";
+    }
+    if (woundSize === "") {
+      newErrors.woundSizeError = "Wound size is required";
+    }
+    if (medicalDiaryData.image === "") {
+      newErrors.imageError = "Image is required";
+    }
+    return newErrors;
+  };
+
+  const onImageUpload = (e) => {};
 
   const imageInputRef = useRef(null);
 
@@ -34,8 +85,17 @@ const MedicalDiary = () => {
     console.log(e.target.files[0]);
   };
 
-  const handleSubmit = () => {
+  const onSubmitHandler = () => {
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setMedicalDiaryDataError(newErrors);
+      return;
+    }
     console.log("Submit");
+    console.log(medicalDiaryData);
+    console.log(medicalDiaryDataError);
+    console.log(selectDrain);
+    console.log(selectColor);
   };
 
   return (
@@ -65,9 +125,16 @@ const MedicalDiary = () => {
                       <label>Date</label>
                       <Form.Control
                         type="date"
+                        name="date"
                         placeholder="Date"
+                        value={medicalDiaryData.date ?? ""}
+                        onChange={handleInput}
+                        isInvalid={!!medicalDiaryDataError.dateError}
                         className={styles.formControl}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {medicalDiaryDataError.dateError}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -78,6 +145,8 @@ const MedicalDiary = () => {
                       items={TempDrainData}
                       setSelectedItem={setSelectDrain}
                       selectedItem={selectDrain}
+                      isInvalid={!!medicalDiaryDataError.drainError}
+                      errorMsg={medicalDiaryDataError.drainError}
                     />
                   </Col>
                 </Row>
@@ -88,6 +157,9 @@ const MedicalDiary = () => {
                       items={TempDrainData}
                       selectedItem={selectColor}
                       setSelectedItem={setSelectColor}
+                      isInvalid={!!medicalDiaryDataError.colorError}
+                      errorMsg={medicalDiaryDataError.colorError}
+                      setErrorMessage={setMedicalDiaryDataError}
                     />
                   </Col>
                 </Row>
@@ -100,9 +172,16 @@ const MedicalDiary = () => {
                       <label>Volume</label>
                       <Form.Control
                         type="text"
+                        name="volume"
                         placeholder="Volume"
+                        value={medicalDiaryData.volume ?? ""}
+                        onChange={handleInput}
+                        isInvalid={!!medicalDiaryDataError.volumeError}
                         className={styles.formControl}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {medicalDiaryDataError.volumeError}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md="12" xs={10} className="">
@@ -113,9 +192,16 @@ const MedicalDiary = () => {
                       <Form.Label>Wound Size</Form.Label>
                       <Form.Control
                         type="text"
+                        name="woundSize"
                         placeholder="Wound Size"
+                        value={medicalDiaryData.woundSize ?? ""}
+                        onChange={handleInput}
+                        isInvalid={!!medicalDiaryDataError.woundSizeError}
                         className={styles.formControl}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {medicalDiaryDataError.woundSizeError}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -157,7 +243,7 @@ const MedicalDiary = () => {
             className="btn-fill pull"
             type="submit"
             variant="success"
-            onClick={handleSubmit}
+            onClick={onSubmitHandler}
           >
             Submit
           </Button>

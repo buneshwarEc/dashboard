@@ -3,6 +3,7 @@ import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
 import styles from "./CreateCathere.module.css";
 import DropDown from "../../components/UI/DropDown";
+import { useRef } from "react";
 
 const tempPhysician = [
   {
@@ -33,7 +34,83 @@ const exchangeData = [
 const CreateCathere = () => {
   const [selectPhysician, setSelectPhysician] = useState("Select a Physician");
   const [selectExchange, setSelectExchange] = useState("No");
-  const [selectFollowUp, setSelectFollowUp] = useState("Select a Follow Up");
+  const [pcnCatheterData, setPcnCatheterData] = useState({
+    size: "",
+    location: "",
+    followUp: "yyyy-MM-dd",
+  });
+  const [pcnCatheterDataError, setPcnCatheterDataError] = useState({
+    datePlacedError: "",
+    physicianError: "",
+    sizeError: "",
+    locationError: "",
+    followUpError: "",
+  });
+
+  const dateRef = useRef(null);
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setPcnCatheterData({ ...pcnCatheterData, [name]: value });
+    setPcnCatheterDataError({ ...pcnCatheterDataError, [name + "Error"]: "" });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const { size, location, followUp } = pcnCatheterData;
+
+    const datePlaced = dateRef.current.value;
+
+    if (datePlaced === "") {
+      newErrors.datePlacedError = "Date placed is required";
+    }
+    if (selectPhysician === "Select a Physician") {
+      newErrors.physicianError = "Physician is required";
+    }
+    if (size === "") {
+      newErrors.sizeError = "Size is required";
+    }
+    if (location === "") {
+      newErrors.locationError = "Location is required";
+    }
+    if (followUp === "yyyy-MM-dd") {
+      newErrors.followUpError = "Follow up is required";
+    }
+    return newErrors;
+  };
+
+  const onSubmitHandler = () => {
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setPcnCatheterDataError(errors);
+      return;
+    }
+    console.log("Form Submitted");
+    console.log("dajfhajs", dateRef.current.value);
+    console.log(pcnCatheterData);
+    console.log(selectPhysician);
+    console.log(selectExchange);
+  };
+
+  const onResetHandler = () => {
+    console.log("Form Reset");
+    setPcnCatheterData({
+      // datePlaced: "yyyy-MM-dd",
+      size: "",
+      location: "",
+      // followUp: "yyyy-MM-dd",
+    });
+    setPcnCatheterDataError({
+      datePlacedError: "",
+      physicianError: "",
+      sizeError: "",
+      locationError: "",
+      followUpError: "",
+    });
+    dateRef.current.value = "";
+    setSelectPhysician("Select a Physician");
+    setSelectExchange("No");
+  };
 
   return (
     <>
@@ -51,14 +128,20 @@ const CreateCathere = () => {
                   <Row>
                     <Col className="px-2" md="6">
                       <Form.Group className={styles.formGroup}>
-                        <label htmlFor="exampleInputEmail1">Date place</label>
+                        <label htmlFor="datePlace">Date place</label>
                         <Form.Control
                           className={styles.formControl}
+                          id="datePlace"
                           type="date"
                           name="datePlaced"
-                          // value={user.emailId ?? ""}
-                          required
-                        ></Form.Control>
+                          // onChange={handleInput}
+                          ref={dateRef}
+                          // value={pcnCatheterData.datePlaced ?? ""}
+                          isInvalid={!!pcnCatheterDataError.datePlacedError}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {pcnCatheterDataError.datePlacedError}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col className="px-2" md="6">
@@ -68,6 +151,8 @@ const CreateCathere = () => {
                           items={tempPhysician}
                           selectedItem={selectPhysician}
                           setSelectedItem={setSelectPhysician}
+                          isInvalid={!!pcnCatheterDataError.physicianError}
+                          errorMsg={pcnCatheterDataError.physicianError}
                         />
                       </div>
                     </Col>
@@ -75,15 +160,20 @@ const CreateCathere = () => {
                   <Row>
                     <Col className="px-2 " md="6">
                       <Form.Group className={styles.formGroup}>
-                        <label>Size</label>
+                        <label htmlFor="size">Size</label>
                         <Form.Control
                           className={styles.formControl}
+                          id="size"
                           placeholder="Size"
                           name="size"
                           type="text"
-                          required
-                          // onChange={handleFormInput}
-                        ></Form.Control>
+                          value={pcnCatheterData.size ?? ""}
+                          onChange={handleInput}
+                          isInvalid={!!pcnCatheterDataError.sizeError}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {pcnCatheterDataError.sizeError}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col className="px-2" md="6">
@@ -93,6 +183,8 @@ const CreateCathere = () => {
                           items={exchangeData}
                           selectedItem={selectExchange}
                           setSelectedItem={setSelectExchange}
+                          isInvalid={!!pcnCatheterDataError.exchangeError}
+                          errorMsg={pcnCatheterDataError.exchangeError}
                         />
                       </div>
                     </Col>
@@ -100,27 +192,37 @@ const CreateCathere = () => {
                   <Row>
                     <Col className="px-2 " md="6">
                       <Form.Group className={styles.formGroup}>
-                        <label>Location</label>
+                        <label htmlFor="location">Location</label>
                         <Form.Control
                           className={styles.formControl}
+                          id="location"
                           placeholder="Location"
                           name="location"
                           type="text"
-                          required
-                          // onChange={handleFormInput}
-                        ></Form.Control>
+                          value={pcnCatheterData.location ?? ""}
+                          onChange={handleInput}
+                          isInvalid={!!pcnCatheterDataError.locationError}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {pcnCatheterDataError.locationError}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col className="px-2 pd-1" md="6">
                       <Form.Group className={styles.formGroup}>
-                        <label htmlFor="exampleInputEmail1">Follow Up</label>
+                        <label htmlFor="followUp">Follow Up</label>
                         <Form.Control
                           className={styles.formControl}
+                          id="followUp"
                           type="date"
                           name="followUp"
-                          required
-                          // value={user.emailId ?? ""}
-                        ></Form.Control>
+                          onChange={handleInput}
+                          value={pcnCatheterData.followUp ?? ""}
+                          isInvalid={!!pcnCatheterDataError.followUpError}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {pcnCatheterDataError.followUpError}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -131,6 +233,7 @@ const CreateCathere = () => {
                       className="btn-fill pull-right"
                       type="submit"
                       variant="success"
+                      onClick={onSubmitHandler}
                     >
                       Submit
                     </Button>
@@ -140,6 +243,7 @@ const CreateCathere = () => {
                       className="btn-fill pull-right"
                       type="reset"
                       variant="danger"
+                      onClick={onResetHandler}
                     >
                       Reset
                     </Button>

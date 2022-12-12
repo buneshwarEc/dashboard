@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 
 import styles from "./DropDown.module.css";
 
-const DropDown = ({ label, items, selectedItem, setSelectedItem }) => {
+const DropDown = ({
+  errorMsg = "",
+  label,
+  items,
+  selectedItem,
+  setSelectedItem,
+}) => {
+  const [showErrorMgs, setShowErrorMgs] = useState(false);
+
+  useEffect(() => {
+    setShowErrorMgs(!!errorMsg);
+  }, [errorMsg]);
+
+  const dropDownToggleStyle = showErrorMgs
+    ? [styles.dropDownToggle, styles.dropDownToggleInvalid]
+    : styles.dropDownToggle;
+
+  const onDropDownItemClick = (item) => {
+    console.log(item.name);
+    setSelectedItem(item.name);
+    setShowErrorMgs(false);
+  };
+
   return (
     <div className={styles.dropDown}>
       <label>{label}</label>
@@ -11,7 +33,7 @@ const DropDown = ({ label, items, selectedItem, setSelectedItem }) => {
         <Dropdown.Toggle
           variant=" "
           id="dropdown-basic"
-          className={styles.dropDownToggle}
+          className={dropDownToggleStyle}
         >
           {selectedItem}
         </Dropdown.Toggle>
@@ -20,13 +42,14 @@ const DropDown = ({ label, items, selectedItem, setSelectedItem }) => {
             <Dropdown.Item
               key={item.id}
               className={styles.dropDownItem}
-              onClick={() => setSelectedItem(item.name)}
+              onClick={() => onDropDownItemClick(item)}
             >
               {item.name}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>
       </Dropdown>
+      {showErrorMgs && <div className={styles.errorMessage}>{errorMsg}</div>}
     </div>
   );
 };
