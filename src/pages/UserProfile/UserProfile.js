@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   Image,
+  Spinner,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -27,6 +28,7 @@ const tempHospitalList = [
 ];
 
 const User = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
     id: "",
     name: "",
@@ -49,7 +51,8 @@ const User = () => {
     postalCode: false,
     image: false,
   });
-  const [hospitalName, setHospitalName] = useState("Select a Hospital");
+  const [selectedHospitalName, setSelectedHospitalName] =
+    useState("Select a Hospital");
 
   const data = useSelector((state) => state?.User?.UserDetails?.employee) ?? [];
   const token = useSelector((state) => state?.Auth?.token);
@@ -58,7 +61,12 @@ const User = () => {
 
   useEffect(() => {
     getUserDetails();
-  }, []);
+    // setIsLoading(false);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   useEffect(() => {
     if (data && data.length != 0) {
@@ -79,7 +87,7 @@ const User = () => {
   }, [data]);
 
   const getUserDetails = () => {
-    dispatch(getUserDetailsAction(token));
+    // dispatch(getUserDetailsAction(token));
   };
 
   const handleFormInput = (e) => {
@@ -128,11 +136,8 @@ const User = () => {
     setIsEdited({ ...isEdited, image: true });
   };
 
-  const handleUpdateBtn = (e) => {
-    e.preventDefault();
-    console.log("Update");
-
-    // post data to server  when Fields are edited
+  const updateData = () => {
+    // Post data to server when Fields are edited
     let updatedData = {};
     isEdited.mobileNo &&
       (updatedData = { ...updatedData, MobileNo: user.mobileNo });
@@ -145,9 +150,39 @@ const User = () => {
       (updatedData = { ...updatedData, Postal_Code: user.postalCode });
     isEdited.image &&
       (updatedData = { ...updatedData, User_Profile_image: user.image });
+    if (
+      selectedHospitalName !== "Select a Hospital" &&
+      selectedHospitalName !== user.hospitalName &&
+      user.hospitalName === ""
+    ) {
+      updatedData = { ...updatedData, Hospital_Name: selectedHospitalName };
+      user.hospitalName = selectedHospitalName;
+    } else if (user.hospitalName !== "" && isEdited.hospitalName) {
+      updatedData = { ...updatedData, Hospital_Name: user.hospitalName };
+    }
+    return updatedData;
+  };
 
-    console.log("updatedData", updatedData);
+  const handleUpdateBtn = (e) => {
+    e.preventDefault();
+    let updatedData = updateData();
+    // console.log("updatedData", updatedData);
+    if (Object.keys(updatedData).length === 0) {
+      console.log("No Data to Update");
+      return;
+    }
     // dispatch(updateUserDetailsAction(token, updatedData));
+    setUser({ ...user, updateImage: "" });
+    setIsEdited({
+      hospitalName: false,
+      mobileNo: false,
+      address: false,
+      city: false,
+      country: false,
+      postalCode: false,
+      image: false,
+    });
+    setIsLoading(true);
   };
 
   const profilePicSrc = user.updateImage
@@ -161,208 +196,216 @@ const User = () => {
   return (
     <>
       <Container fluid>
-        <Row>
-          <Col md="12 ">
-            <Card className={[styles.cardContainer] + " " + "card-user"}>
-              <Card.Header>
-                <Card.Title as="h4">Edit Profile</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <div className="author d-flex justify-content-end justify-content-sm-center  ">
-                  <figure style={{ position: "relative" }}>
-                    <input
-                      ref={imageInputRef}
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      name="image"
-                      // value={user.image ?? ""}
-                      className="d-none"
-                      onChange={onImageChange}
-                    />
-                    <Image
-                      alt="..."
-                      className="avatar border-gray"
-                      src={profilePicSrc}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: "6.5rem",
-                        top: "5rem",
-                        zIndex: "1",
-                      }}
-                    >
-                      <img
-                        src={require("assets/img/cameraIcon.png")}
-                        className="border-gray"
-                        style={{
-                          width: "1.5rem",
-                          height: "1.5rem",
-                        }}
-                        onClick={handleProfilePicUpload}
+        {isLoading ? (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : (
+          <Row>
+            <Col md="12 ">
+              <Card className={[styles.cardContainer] + " " + "card-user"}>
+                <Card.Header>
+                  <Card.Title as="h4">Edit Profile</Card.Title>
+                </Card.Header>
+
+                <Card.Body>
+                  <div className="author d-flex justify-content-end justify-content-sm-center  ">
+                    <figure style={{ position: "relative" }}>
+                      <input
+                        ref={imageInputRef}
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        name="image"
+                        // value={user.image ?? ""}
+                        className="d-none"
+                        onChange={onImageChange}
                       />
-                    </div>
-                    {/* <figcaption className=" title">{user.name}</figcaption> */}
-                  </figure>
-                </div>
-                <Form className="p-1" onSubmit={handleUpdateBtn}>
-                  <Row>
-                    <Col className="px-2" md="6">
-                      <Form.Group className={styles.formGroup}>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
-                        </label>
-                        <Form.Control
-                          // className={styles.formControl}
-                          placeholder="Email"
-                          type="email"
-                          name="emailId"
-                          value={user.emailId ?? ""}
-                          plaintext
-                          readOnly
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-
-                    <Col className="px-2" md="6">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Name</label>
-                        <Form.Control
-                          placeholder="Name"
-                          type="text"
-                          name="name"
-                          value={user.name ?? ""}
-                          plaintext
-                          readOnly
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col className="px-1" md="5">
-                      <div className="formGroup">
-                        <DropDown
-                          label="Hospital Name"
-                          items={tempHospitalList}
-                          selectedItem={hospitalName}
-                          setSelectedItem={setHospitalName}
-                        />
-                      </div>
-                    </Col>
-                    <Col md="2">
+                      <Image
+                        alt="..."
+                        className="avatar border-gray"
+                        src={profilePicSrc}
+                      />
                       <div
-                        className="formGroup pt-md-4"
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          paddingTop: "0.5rem",
+                          position: "absolute",
+                          left: "6.5rem",
+                          top: "5rem",
+                          zIndex: "1",
                         }}
                       >
-                        <p>OR</p>
+                        <img
+                          src={require("assets/img/cameraIcon.png")}
+                          className="border-gray"
+                          style={{
+                            width: "1.5rem",
+                            height: "1.5rem",
+                          }}
+                          onClick={handleProfilePicUpload}
+                        />
                       </div>
-                    </Col>
-                    <Col className="px-1" md="5">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Hospital Name</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="Hospital Name"
-                          type="text"
-                          name="hospitalName"
-                          value={user.hospitalName ?? ""}
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col className="px-2" md="8">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Address</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="Address"
-                          value={user.address ?? ""}
-                          name="address"
-                          type="text"
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-
-                    <Col className="px-2" md="4">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Mobile No</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="Mobile No"
-                          type="number"
-                          name="mobileNo"
-                          value={user.mobileNo ?? ""}
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="px-2" md="4">
-                      <Form.Group className={styles.formGroup}>
-                        <label>City</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="City"
-                          value={user.city ?? ""}
-                          name="city"
-                          type="text"
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-2" md="4">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Country</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="Country"
-                          type="text"
-                          name="country"
-                          value={user.country ?? ""}
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-2" md="4">
-                      <Form.Group className={styles.formGroup}>
-                        <label>Postal Code</label>
-                        <Form.Control
-                          className={styles.formControl}
-                          placeholder="ZIP Code"
-                          name="postalCode"
-                          value={user.postalCode ?? ""}
-                          type="number"
-                          onChange={handleFormInput}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <div className="mt-3 mb-2 d-flex justify-content-center">
-                    <Button
-                      className="btn-fill pull"
-                      type="submit"
-                      variant="info"
-                    >
-                      Update Profile
-                    </Button>
+                    </figure>
                   </div>
-                  <div className="clearfix"></div>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+                  <Form className="p-1" onSubmit={handleUpdateBtn}>
+                    <Row>
+                      <Col className="px-2" md="6">
+                        <Form.Group className={styles.formGroup}>
+                          <label htmlFor="exampleInputEmail1">
+                            Email address
+                          </label>
+                          <Form.Control
+                            placeholder="Email"
+                            type="email"
+                            name="emailId"
+                            value={user.emailId ?? ""}
+                            plaintext
+                            readOnly
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+
+                      <Col className="px-2" md="6">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Name</label>
+                          <Form.Control
+                            placeholder="Name"
+                            type="text"
+                            name="name"
+                            value={user.name ?? ""}
+                            plaintext
+                            readOnly
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col className="px-1" md="5">
+                        <div className="formGroup">
+                          <DropDown
+                            label="Hospital Name"
+                            items={tempHospitalList}
+                            selectedItem={selectedHospitalName}
+                            setSelectedItem={setSelectedHospitalName}
+                          />
+                        </div>
+                      </Col>
+                      <Col md="2">
+                        <div
+                          className="formGroup pt-md-4"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            paddingTop: "0.5rem",
+                          }}
+                        >
+                          <p>OR</p>
+                        </div>
+                      </Col>
+                      <Col className="px-1" md="5">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Hospital Name</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="Hospital Name"
+                            type="text"
+                            name="hospitalName"
+                            value={user.hospitalName ?? ""}
+                            onChange={handleFormInput}
+                            onBlur={() => {
+                              setSelectedHospitalName("Select a Hospital");
+                            }}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col className="px-2" md="8">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Address</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="Address"
+                            value={user.address ?? ""}
+                            name="address"
+                            type="text"
+                            onChange={handleFormInput}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+
+                      <Col className="px-2" md="4">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Mobile No</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="Mobile No"
+                            type="number"
+                            name="mobileNo"
+                            value={user.mobileNo ?? ""}
+                            onChange={handleFormInput}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="px-2" md="4">
+                        <Form.Group className={styles.formGroup}>
+                          <label>City</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="City"
+                            value={user.city ?? ""}
+                            name="city"
+                            type="text"
+                            onChange={handleFormInput}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                      <Col className="px-2" md="4">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Country</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="Country"
+                            type="text"
+                            name="country"
+                            value={user.country ?? ""}
+                            onChange={handleFormInput}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                      <Col className="pl-2" md="4">
+                        <Form.Group className={styles.formGroup}>
+                          <label>Postal Code</label>
+                          <Form.Control
+                            className={styles.formControl}
+                            placeholder="ZIP Code"
+                            name="postalCode"
+                            value={user.postalCode ?? ""}
+                            type="number"
+                            onChange={handleFormInput}
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <div className="mt-3 mb-2 d-flex justify-content-center">
+                      <Button
+                        className="btn-fill pull"
+                        type="submit"
+                        variant="info"
+                      >
+                        Update Profile
+                      </Button>
+                    </div>
+                    <div className="clearfix"></div>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        )}
       </Container>
     </>
   );

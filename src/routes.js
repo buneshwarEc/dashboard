@@ -27,7 +27,8 @@ import MedicalHistory from "./pages/MedicalHistory";
 import MedicalDiary from "./pages/MedicalDiary/MedicalDiary";
 import CatheterTransaction from "./pages/CatheterTransaction";
 import CreateCathere from "./pages/CreateCathere/CreateCathere";
-import Testmonial from "./pages/Testmonial";
+import Testimonial from "./pages/Testimonial/Testimonial";
+import CreateTestimonial from "pages/Testimonial/CreateTestimonial.js";
 
 const dashboardRoutes = [
   // {
@@ -54,31 +55,38 @@ const dashboardRoutes = [
   },
 
   {
-    path: "/CreateCathere",
+    path: "/createCathere",
     name: "PCN Catheter",
     icon: "nc-icon nc-chart-pie-35",
     component: CreateCathere,
     layout: "/admin",
   },
   {
-    path: "/Medical Diary",
+    path: "/medical Diary",
     name: "Medical Diary",
     icon: "nc-icon nc-single-copy-04",
     component: MedicalDiary,
     layout: "/admin",
   },
   {
-    path: "/CatheterTransaction",
+    path: "/catheterTransaction",
     name: "Catheter Transaction",
     icon: "nc-icon nc-paper-2",
     component: CatheterTransaction,
     layout: "/admin",
   },
   {
-    path: "/Testmonial",
-    name: "Testmonial",
+    path: "/testimonial",
+    name: "Testimonial",
     icon: "nc-icon nc-chart-pie-35",
-    component: Testmonial,
+    component: Testimonial,
+    layout: "/admin",
+  },
+  {
+    path: "/create-testimonial",
+    name: "Create Testimonial",
+    icon: "nc-icon nc-chart-pie-35",
+    component: CreateTestimonial,
     layout: "/admin",
   },
 

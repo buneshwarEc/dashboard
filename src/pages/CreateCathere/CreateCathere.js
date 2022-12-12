@@ -37,7 +37,6 @@ const CreateCathere = () => {
   const [pcnCatheterData, setPcnCatheterData] = useState({
     size: "",
     location: "",
-    followUp: "yyyy-MM-dd",
   });
   const [pcnCatheterDataError, setPcnCatheterDataError] = useState({
     datePlacedError: "",
@@ -47,7 +46,11 @@ const CreateCathere = () => {
     followUpError: "",
   });
 
-  const dateRef = useRef(null);
+  // const dateRef = useRef(null);
+  // const followUpRef = useRef(null);
+
+  // const datePlaced = dateRef.current.value;
+  // const followUp = followUpRef.current.value;
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -57,13 +60,11 @@ const CreateCathere = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    const { size, location, followUp } = pcnCatheterData;
+    const { size, location } = pcnCatheterData;
 
-    const datePlaced = dateRef.current.value;
-
-    if (datePlaced === "") {
-      newErrors.datePlacedError = "Date placed is required";
-    }
+    // if (dateRef.current.value === "") {
+    //   newErrors.datePlacedError = "Date placed is required";
+    // }
     if (selectPhysician === "Select a Physician") {
       newErrors.physicianError = "Physician is required";
     }
@@ -73,9 +74,9 @@ const CreateCathere = () => {
     if (location === "") {
       newErrors.locationError = "Location is required";
     }
-    if (followUp === "yyyy-MM-dd") {
-      newErrors.followUpError = "Follow up is required";
-    }
+    // if (followUpRef.current.value === "") {
+    //   newErrors.followUpError = "Follow up is required";
+    // }
     return newErrors;
   };
 
@@ -86,19 +87,18 @@ const CreateCathere = () => {
       return;
     }
     console.log("Form Submitted");
-    console.log("dajfhajs", dateRef.current.value);
     console.log(pcnCatheterData);
     console.log(selectPhysician);
     console.log(selectExchange);
+    // console.log("datePlaced", dateRef.current.value);
+    // console.log("followUp", followUpRef.current.value);
   };
 
   const onResetHandler = () => {
     console.log("Form Reset");
     setPcnCatheterData({
-      // datePlaced: "yyyy-MM-dd",
       size: "",
       location: "",
-      // followUp: "yyyy-MM-dd",
     });
     setPcnCatheterDataError({
       datePlacedError: "",
@@ -107,7 +107,8 @@ const CreateCathere = () => {
       locationError: "",
       followUpError: "",
     });
-    dateRef.current.value = "";
+    // dateRef.current.value = "";
+    // followUpRef.current.value = "";
     setSelectPhysician("Select a Physician");
     setSelectExchange("No");
   };
@@ -135,7 +136,7 @@ const CreateCathere = () => {
                           type="date"
                           name="datePlaced"
                           // onChange={handleInput}
-                          ref={dateRef}
+                          // ref={dateRef}
                           // value={pcnCatheterData.datePlaced ?? ""}
                           isInvalid={!!pcnCatheterDataError.datePlacedError}
                         />
@@ -213,11 +214,11 @@ const CreateCathere = () => {
                         <label htmlFor="followUp">Follow Up</label>
                         <Form.Control
                           className={styles.formControl}
+                          // ref={followUpRef}
                           id="followUp"
                           type="date"
                           name="followUp"
-                          onChange={handleInput}
-                          value={pcnCatheterData.followUp ?? ""}
+                          // onChange={handleInput}
                           isInvalid={!!pcnCatheterDataError.followUpError}
                         />
                         <Form.Control.Feedback type="invalid">

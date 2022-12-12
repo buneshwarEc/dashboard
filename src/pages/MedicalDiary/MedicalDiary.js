@@ -3,6 +3,7 @@ import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
 import styles from "./MedicalDiary.module.css";
 import DropDown from "../../components/UI/DropDown";
+import { getBase64 } from "utils/GetBase64";
 
 const TempDrainData = [
   {
@@ -45,6 +46,16 @@ const MedicalDiary = () => {
     setMedicalDiaryDataError({
       ...medicalDiaryDataError,
       [name + "Error"]: "",
+    });
+  };
+
+  const onImageChangeHandler = async (e) => {
+    const file = e.target.files[0];
+    let baseImage = await getBase64(file);
+    setMedicalDiaryData({
+      ...medicalDiaryData,
+      image: baseImage,
+      uploadedImage: URL.createObjectURL(e.target.files[0]),
     });
   };
 

@@ -95,7 +95,7 @@ const Header = () => {
                 <span className="d-lg-none ml-1">Dashboard</span>
               </Nav.Link> */}
             </Nav.Item>
-            <Dropdown as={Nav.Item}>
+            {/* <Dropdown as={Nav.Item}>
               <Dropdown.Toggle
                 as={Nav.Link}
                 data-toggle="dropdown"
@@ -139,7 +139,7 @@ const Header = () => {
                   Another notification
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
           </Nav>
           <section className="ml-auto d-flex">
             <div className="m-0 mx-2">
