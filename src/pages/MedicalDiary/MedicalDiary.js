@@ -59,6 +59,17 @@ const MedicalDiary = () => {
     });
   };
 
+  const onImageUpload = (e) => {};
+
+  const imageInputRef = useRef(null);
+
+  const onAddImage = () => {
+    imageInputRef.current.click();
+  };
+
+  const onchangeImage = (e) => {
+    console.log(e.target.files[0]);
+  };
   const validateForm = () => {
     const newErrors = {};
     const { date, volume, woundSize } = medicalDiaryData;
@@ -82,18 +93,6 @@ const MedicalDiary = () => {
       newErrors.imageError = "Image is required";
     }
     return newErrors;
-  };
-
-  const onImageUpload = (e) => {};
-
-  const imageInputRef = useRef(null);
-
-  const onAddImage = () => {
-    imageInputRef.current.click();
-  };
-
-  const onchangeImage = (e) => {
-    console.log(e.target.files[0]);
   };
 
   const onSubmitHandler = () => {

@@ -29,6 +29,7 @@ import CatheterTransaction from "./pages/CatheterTransaction";
 import CreateCathere from "./pages/CreateCathere/CreateCathere";
 import Testimonial from "./pages/Testimonial/Testimonial";
 import CreateTestimonial from "pages/Testimonial/CreateTestimonial.js";
+import ChangePassword from "pages/ChangePassword.js";
 
 const dashboardRoutes = [
   // {
@@ -87,6 +88,14 @@ const dashboardRoutes = [
     name: "Create Testimonial",
     icon: "nc-icon nc-chart-pie-35",
     component: CreateTestimonial,
+    layout: "/admin",
+  },
+
+  {
+    path: "/change-password",
+    name: "Change Password",
+    icon: "nc-icon nc-chart-pie-35",
+    component: ChangePassword,
     layout: "/admin",
   },
 

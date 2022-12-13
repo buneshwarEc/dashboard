@@ -1,28 +1,34 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, Route } from "react-router-dom";
-import { CardLink } from "reactstrap";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./CreateTestimonial.module.css";
+import { addTestimonialAction } from "../../store/Testimonial";
 
 const CreateTestimonial = () => {
+  const token = useSelector((state) => state?.Auth?.token);
+  const dispatch = useDispatch();
+
   const [testimonialData, setTestimonialData] = useState({
     testimonial: "",
     note: "",
   });
 
-  const [testimonialError, setTestimonialError] = useState("");
+  const [testimonialDataError, setTestimonialDataError] = useState({
+    testimonialError: "",
+  });
 
   const handleInput = (e) => {
     const { name, value } = e.target;
     setTestimonialData({ ...testimonialData, [name]: value });
-    setTestimonialError({ ...testimonialError, [name + "Error"]: "" });
+    setTestimonialDataError({ ...testimonialDataError, [name + "Error"]: "" });
   };
 
   const inputValidation = () => {
-    let newErrors = "";
+    let newErrors = {};
     if (testimonialData.testimonial === "") {
-      newErrors = "This field is required";
+      newErrors.testimonialError = "This field is required";
     }
     return newErrors;
   };
@@ -30,11 +36,21 @@ const CreateTestimonial = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const newErrors = inputValidation();
-    if (newErrors) {
-      setTestimonialError(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setTestimonialDataError(newErrors);
       return;
     }
+    const data = {
+      Testimonials: testimonialData.testimonial,
+    };
+    testimonialData.note && (data.Note = testimonialData.note);
+    dispatch(addTestimonialAction(token, data));
+    console.log("data", data);
     console.log(testimonialData);
+    // setTestimonialData({
+    //   testimonial: "",
+    //   note: "",
+    // });
   };
 
   return (
@@ -69,11 +85,11 @@ const CreateTestimonial = () => {
                           name="testimonial"
                           value={testimonialData.testimonial}
                           onChange={handleInput}
-                          isInvalid={testimonialError}
+                          isInvalid={!!testimonialDataError.testimonialError}
                           rows={4}
                         />
                         <Form.Control.Feedback type="invalid">
-                          {testimonialError}
+                          {testimonialDataError.testimonialError}
                         </Form.Control.Feedback>
                       </Form.Group>
                       <Form.Group className={styles.formGroup}>

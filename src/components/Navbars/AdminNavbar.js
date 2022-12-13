@@ -15,9 +15,20 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
+import {
+  Navbar,
+  Container,
+  Nav,
+  Dropdown,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+  Popover,
+  Card,
+  Overlay,
+} from "react-bootstrap";
 
 import routes from "routes.js";
 import { useDispatch } from "react-redux";
@@ -25,6 +36,10 @@ import { LogoutAction } from "../../store/Authentication";
 
 const Header = () => {
   const dispatch = useDispatch();
+
+  const [show, setShow] = useState(false);
+  const [target, setTarget] = useState(null);
+  const containerRef = useRef(null);
 
   const location = useLocation();
   const mobileSidebarToggle = (e) => {
@@ -38,6 +53,31 @@ const Header = () => {
     };
     document.body.appendChild(node);
   };
+
+  const onAccountClick = (e) => {
+    e.preventDefault();
+    // close popover on click outside of popover content area (i.e. on click of popover trigger)
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".popover")) {
+        document.querySelector(".popover").classList.remove("show");
+      }
+    });
+  };
+
+  useEffect(() => {
+    show && setTarget(containerRef.current);
+    if (show) {
+      const popover = document.addEventListener("click", function (event) {
+        if (!event.target.closest(".popover")) {
+          document.querySelector(".popover").classList.remove("show");
+        }
+      });
+
+      return () => {
+        popover;
+      };
+    }
+  }, [show]);
 
   const getBrandText = () => {
     for (let i = 0; i < routes.length; i++) {
@@ -143,12 +183,29 @@ const Header = () => {
           </Nav>
           <section className="ml-auto d-flex">
             <div className="m-0 mx-2">
-              <Button
-                variant="light text-dark border-0"
-                onClick={accountBtnHandler}
-              >
-                <span className="no-icon">Account</span>
-              </Button>
+              <div ref={containerRef}>
+                <Button
+                  variant="light text-dark border-0"
+                  onClick={(e) => {
+                    setTarget(e.target);
+                    setShow(!show);
+                    onAccountClick(e);
+                  }}
+                >
+                  <span className="no-icon">Account</span>
+                </Button>
+                <Overlay
+                  show={show}
+                  target={target}
+                  placement="bottom"
+                  container={containerRef.current}
+                  containerPadding={20}
+                >
+                  <Popover id="popover-contained">
+                    <Popover.Header as="h3">Popover bottom</Popover.Header>
+                  </Popover>
+                </Overlay>
+              </div>
             </div>
             <div className="m-0 mx-2">
               <Button

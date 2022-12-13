@@ -14,6 +14,7 @@ import moment from "moment";
 
 import styles from "./UserProfile.module.css";
 import {
+  getHospitalDataAction,
   getUserDetailsAction,
   updateUserDetailsAction,
 } from "../../store/User";
@@ -55,18 +56,21 @@ const User = () => {
     useState("Select a Hospital");
 
   const data = useSelector((state) => state?.User?.UserDetails?.employee) ?? [];
+  const HospitalData = useSelector((state) => state?.User?.HospitalData);
   const token = useSelector((state) => state?.Auth?.token);
   const dispatch = useDispatch();
   const imageInputRef = useRef();
 
   useEffect(() => {
-    getUserDetails();
+    isLoading && getUserDetails();
     // setIsLoading(false);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 800);
     return () => clearTimeout(timer);
   }, [isLoading]);
+
+  console.log("HospitalData : ", HospitalData);
 
   useEffect(() => {
     if (data && data.length != 0) {
@@ -88,6 +92,7 @@ const User = () => {
 
   const getUserDetails = () => {
     // dispatch(getUserDetailsAction(token));
+    // dispatch(getHospitalDataAction(token));
   };
 
   const handleFormInput = (e) => {
@@ -138,7 +143,9 @@ const User = () => {
 
   const updateData = () => {
     // Post data to server when Fields are edited
-    let updatedData = {};
+    let updatedData = {
+      updated_At: moment().format(),
+    };
     isEdited.mobileNo &&
       (updatedData = { ...updatedData, MobileNo: user.mobileNo });
     isEdited.address &&
@@ -160,17 +167,18 @@ const User = () => {
     } else if (user.hospitalName !== "" && isEdited.hospitalName) {
       updatedData = { ...updatedData, Hospital_Name: user.hospitalName };
     }
+
     return updatedData;
   };
 
   const handleUpdateBtn = (e) => {
     e.preventDefault();
     let updatedData = updateData();
-    // console.log("updatedData", updatedData);
-    if (Object.keys(updatedData).length === 0) {
+    if (Object.keys(updatedData).length === 1) {
       console.log("No Data to Update");
       return;
     }
+    // console.log("updatedData", updatedData);
     // dispatch(updateUserDetailsAction(token, updatedData));
     setUser({ ...user, updateImage: "" });
     setIsEdited({

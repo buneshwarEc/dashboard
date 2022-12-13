@@ -6,6 +6,17 @@
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.2);
 }
 
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #171e88;
+}
+
+.link {
+  color: #171e88;
+  text-decoration: none;
+}
+
 .cardHeader {
   color: "#171E88";
 }
@@ -31,4 +42,9 @@
 .formGroup label {
   font-size: 0.7rem;
   color: #27252c;
+}
+
+.noDataFound {
+  font-size: 1.5rem;
+  font-weight: 400;
 }

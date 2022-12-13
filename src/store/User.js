@@ -6,6 +6,7 @@ import { API } from "../utils/https";
 const initialState = {
   UserDetails: [],
   UserRoll: [],
+  HospitalData: [],
 };
 
 const User = createSlice({
@@ -23,6 +24,10 @@ const User = createSlice({
     UserRoll: (state, action) => {
       // console.log("In User Roll : ", action.payload);
       state.UserRoll = action.payload.user_role;
+    },
+    HospitalData: (state, action) => {
+      console.log("In Hospital Data : ", action.payload);
+      // state.HospitalData = action.payload;
     },
   },
 });
@@ -78,6 +83,25 @@ export const getUserRollAction = () => async (dispatch) => {
   }
 };
 
-export const { UserDetails, UserRoll, UpdateUserDetails } = User.actions;
+export const getHospitalDataAction = (token) => async (dispatch) => {
+  const configHeader = {
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,
+  };
+  console.log("Token : ", token);
+  try {
+    const res = await axios({
+      method: "GET",
+      url: `${API}/user/Hospital/`,
+      headers: configHeader,
+    });
+    dispatch(HospitalData(res.data));
+  } catch (err) {
+    console.log("Get Hospital Data Error : ", err);
+  }
+};
+
+export const { UserDetails, UserRoll, UpdateUserDetails, HospitalData } =
+  User.actions;
 
 export default User.reducer;

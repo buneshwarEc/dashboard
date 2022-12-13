@@ -4,6 +4,7 @@ import { API } from "../utils/https";
 
 const initialState = {
   TestimonialHistoryData: [],
+  TestimonialData: [],
 };
 
 const Testimonial = createSlice({
@@ -13,6 +14,10 @@ const Testimonial = createSlice({
     TestimonialHistoryData: (state, action) => {
       console.log("In Testimonial History Data : ", action.payload);
       state.TestimonialHistoryData = action.payload;
+    },
+    AddTestimonialData: (state, action) => {
+      console.log("In Add Testimonial : ", action.payload);
+      state.TestimonialData = action.payload;
     },
   },
 });
@@ -35,6 +40,27 @@ export const getTestimonialHistoryDataAction = (token) => async (dispatch) => {
   }
 };
 
-export const { TestimonialHistoryData } = Testimonial.actions;
+export const addTestimonialAction = (token, data) => async (dispatch) => {
+  const configHeader = {
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,
+  };
+  console.log("data in redux", data);
+
+  try {
+    const res = await axios({
+      method: "POST",
+      url: `${API}/patient/PatientTestmonial/`,
+      headers: configHeader,
+      data: data,
+    });
+    dispatch(AddTestimonialData(res.data));
+  } catch (err) {
+    console.log("Add Testimonial Error : ", err);
+  }
+};
+
+export const { TestimonialHistoryData, AddTestimonialData } =
+  Testimonial.actions;
 
 export default Testimonial.reducer;
