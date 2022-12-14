@@ -33,7 +33,7 @@ const Testimonial = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(getTestimonialHistoryDataAction(token));
+    dispatch(getTestimonialHistoryDataAction(token));
   }, [token]);
 
   return (

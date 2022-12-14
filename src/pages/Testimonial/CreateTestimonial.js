@@ -47,10 +47,10 @@ const CreateTestimonial = () => {
     dispatch(addTestimonialAction(token, data));
     console.log("data", data);
     console.log(testimonialData);
-    // setTestimonialData({
-    //   testimonial: "",
-    //   note: "",
-    // });
+    setTestimonialData({
+      testimonial: "",
+      note: "",
+    });
   };
 
   return (
