@@ -8,9 +8,9 @@
 .dropDown label {
   display: flex;
   align-items: center;
-  font-size: 0.7rem;
+  font-size: 1rem;
   margin-right: 1em;
-  color: #27252c;
+  color: #000;
 }
 
 .dropDownToggle {
