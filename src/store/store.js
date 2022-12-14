@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 
 import Authentication from "./Authentication";
+import MedicalDiary from "./MedicalDiary";
 import Testimonial from "./Testimonial";
 import User from "./User";
 
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   Auth: Authentication,
   User: User,
   Testimonial: Testimonial,
+  MedicalDiary: MedicalDiary,
 });
 
 const persistConfig = {

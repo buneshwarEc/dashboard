@@ -29,17 +29,9 @@ import CatheterTransaction from "./pages/CatheterTransaction";
 import CreateCathere from "./pages/CreateCathere/CreateCathere";
 import Testimonial from "./pages/Testimonial/Testimonial";
 import CreateTestimonial from "pages/Testimonial/CreateTestimonial.js";
-import ChangePassword from "pages/ChangePassword.js";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
 
 const dashboardRoutes = [
-  // {
-  //   upgrade: true,
-  //   path: "/upgrade",
-  //   name: "Upgrade to PRO",
-  //   icon: "nc-icon nc-alien-33",
-  //   component: Upgrade,
-  //   layout: "/admin"
-  // },
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -134,6 +126,52 @@ const dashboardRoutes = [
   //   component: Notifications,
   //   layout: "/admin",
   // },
+];
+
+export const sideBarRoutes = [
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "nc-icon nc-grid-45", //nc-layers-3, nc-grid-45
+    component: Dashboard,
+    layout: "/admin",
+  },
+  {
+    path: "/user",
+    name: "User Profile",
+    icon: "nc-icon nc-circle-09",
+    component: UserProfile,
+    layout: "/admin",
+  },
+
+  {
+    path: "/createCathere",
+    name: "PCN Catheter",
+    icon: "nc-icon nc-chart-pie-35",
+    component: CreateCathere,
+    layout: "/admin",
+  },
+  {
+    path: "/medical Diary",
+    name: "Medical Diary",
+    icon: "nc-icon nc-single-copy-04",
+    component: MedicalDiary,
+    layout: "/admin",
+  },
+  {
+    path: "/catheterTransaction",
+    name: "Catheter Transaction",
+    icon: "nc-icon nc-paper-2",
+    component: CatheterTransaction,
+    layout: "/admin",
+  },
+  {
+    path: "/testimonial",
+    name: "Testimonial",
+    icon: "nc-icon nc-chart-pie-35",
+    component: Testimonial,
+    layout: "/admin",
+  },
 ];
 
 export default dashboardRoutes;

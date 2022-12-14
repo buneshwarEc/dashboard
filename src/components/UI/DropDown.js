@@ -9,6 +9,7 @@ const DropDown = ({
   items,
   selectedItem,
   setSelectedItem,
+  setSelectedItemID,
 }) => {
   const [showErrorMgs, setShowErrorMgs] = useState(false);
 
@@ -21,8 +22,8 @@ const DropDown = ({
     : styles.dropDownToggle;
 
   const onDropDownItemClick = (item) => {
-    console.log(item.name);
-    setSelectedItem(item.name);
+    setSelectedItem(item.Hospital_Name || item.name);
+    setSelectedItemID && setSelectedItemID(item.id);
     setShowErrorMgs(false);
   };
 
@@ -44,7 +45,7 @@ const DropDown = ({
               className={styles.dropDownItem}
               onClick={() => onDropDownItemClick(item)}
             >
-              {item.name}
+              {item.name || item.Hospital_Name}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>

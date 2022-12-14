@@ -70,12 +70,10 @@ const User = () => {
     return () => clearTimeout(timer);
   }, [isLoading]);
 
-  console.log("HospitalData : ", HospitalData);
-
   useEffect(() => {
     if (data && data.length != 0) {
       // console.log("Data : ", data);
-      console.log("ProfilePic : ", data[0].User_Profile_image);
+      // console.log("ProfilePic : ", data[0].User_Profile_image);
       setUser({
         id: data[0].User_Id ?? "",
         name: data[0].User_Full_Name ?? "",
@@ -91,7 +89,7 @@ const User = () => {
   }, [data]);
 
   const getUserDetails = () => {
-    // dispatch(getUserDetailsAction(token));
+    dispatch(getUserDetailsAction(token));
     // dispatch(getHospitalDataAction(token));
   };
 
@@ -178,8 +176,8 @@ const User = () => {
       console.log("No Data to Update");
       return;
     }
-    // console.log("updatedData", updatedData);
-    // dispatch(updateUserDetailsAction(token, updatedData));
+    console.log("updatedData", updatedData);
+    dispatch(updateUserDetailsAction(token, updatedData));
     setUser({ ...user, updateImage: "" });
     setIsEdited({
       hospitalName: false,
@@ -291,7 +289,7 @@ const User = () => {
                         <div className="formGroup">
                           <DropDown
                             label="Hospital Name"
-                            items={tempHospitalList}
+                            items={HospitalData}
                             selectedItem={selectedHospitalName}
                             setSelectedItem={setSelectedHospitalName}
                           />

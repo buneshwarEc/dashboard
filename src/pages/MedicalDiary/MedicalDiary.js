@@ -1,9 +1,15 @@
-import React, { useRef, useState } from "react";
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./MedicalDiary.module.css";
 import DropDown from "../../components/UI/DropDown";
-import { getBase64 } from "utils/GetBase64";
+import { getHospitalDataAction } from "store/User";
+import { data } from "jquery";
+import {
+  addMedicalDiaryDataAction,
+  getMedicalDiaryDataAction,
+} from "../../store/MedicalDiary";
 
 const TempDrainData = [
   {
@@ -21,24 +27,31 @@ const TempDrainData = [
 ];
 
 const MedicalDiary = () => {
-  const [selectDrain, setSelectDrain] = useState("Select a Drain");
-  const [selectColor, setSelectColor] = useState("Select a Color");
-  const [startDate, setStartDate] = useState(new Date());
+  const token = useSelector((state) => state?.Auth?.token);
+  const HospitalData = useSelector((state) => state?.User?.HospitalData);
+  const MedicalDiaryData = useSelector(
+    (state) => state?.MedicalDiary?.MedicalDiaryData
+  );
+
+  console.log("Medical Diary Data : ", MedicalDiaryData);
+
+  const [selectHospital, setSelectHospital] = useState("Select a Hospital");
+  const [selectedHospitalId, setSelectedHospitalId] = useState("");
   const [medicalDiaryData, setMedicalDiaryData] = useState({
-    date: "yyyy-MM-dd",
-    volume: "",
-    woundSize: "",
-    image: "",
-    uploadedImage: "",
+    otherHospitalName: "",
+    drain: "",
   });
   const [medicalDiaryDataError, setMedicalDiaryDataError] = useState({
-    dateError: "",
+    hospitalError: "",
     drainError: "",
-    colorError: "",
-    volumeError: "",
-    woundSizeError: "",
-    imageError: "",
   });
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getHospitalDataAction(token));
+    dispatch(getMedicalDiaryDataAction(token));
+  }, []);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -49,216 +62,102 @@ const MedicalDiary = () => {
     });
   };
 
-  const onImageChangeHandler = async (e) => {
-    const file = e.target.files[0];
-    let baseImage = await getBase64(file);
-    setMedicalDiaryData({
-      ...medicalDiaryData,
-      image: baseImage,
-      uploadedImage: URL.createObjectURL(e.target.files[0]),
-    });
-  };
-
-  const onImageUpload = (e) => {};
-
-  const imageInputRef = useRef(null);
-
-  const onAddImage = () => {
-    imageInputRef.current.click();
-  };
-
-  const onchangeImage = (e) => {
-    console.log(e.target.files[0]);
-  };
   const validateForm = () => {
     const newErrors = {};
-    const { date, volume, woundSize } = medicalDiaryData;
-
-    if (date === "yyyy-MM-dd") {
-      newErrors.dateError = "Date is required";
+    const { otherHospitalName, drain } = medicalDiaryData;
+    if (selectHospital === "Select a Hospital") {
+      newErrors.drainError = "Hospital is required";
     }
-    if (selectDrain === "Select a Drain") {
+    if (drain === "") {
       newErrors.drainError = "Drain is required";
-    }
-    if (selectColor === "Select a Color") {
-      newErrors.colorError = "Color is required";
-    }
-    if (volume === "") {
-      newErrors.volumeError = "Volume is required";
-    }
-    if (woundSize === "") {
-      newErrors.woundSizeError = "Wound size is required";
-    }
-    if (medicalDiaryData.image === "") {
-      newErrors.imageError = "Image is required";
     }
     return newErrors;
   };
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setMedicalDiaryDataError(newErrors);
       return;
     }
-    console.log("Submit");
-    console.log(medicalDiaryData);
-    console.log(medicalDiaryDataError);
-    console.log(selectDrain);
-    console.log(selectColor);
+    data = {
+      Hospital: selectedHospitalId,
+      Other_Hospital_Name: medicalDiaryData.otherHospitalName,
+      Drain: medicalDiaryData.drain,
+    };
+    console.log("submit", data);
+    dispatch(addMedicalDiaryDataAction(token, data));
   };
 
   return (
     <Container>
-      <Card className={styles.cardContainer}>
-        <Row>
-          {/* <Col md="5">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Calendar />
-            </div>
-          </Col> */}
-          <Col md="8">
-            <div className={styles.formContainer}>
-              <Form className="p-1">
-                <Row>
-                  <Col md="12" xs={10}>
-                    <Form.Group
-                      controlId="formBasicDate"
-                      className={styles.formGroup}
-                    >
-                      <label>Date</label>
-                      <Form.Control
-                        type="date"
-                        name="date"
-                        placeholder="Date"
-                        value={medicalDiaryData.date ?? ""}
-                        onChange={handleInput}
-                        isInvalid={!!medicalDiaryDataError.dateError}
-                        className={styles.formControl}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {medicalDiaryDataError.dateError}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row className="my-2">
-                  <Col xs={10} md="12">
-                    <DropDown
-                      label="Drain"
-                      items={TempDrainData}
-                      setSelectedItem={setSelectDrain}
-                      selectedItem={selectDrain}
+      <Row className=" d-flex justify-content-center align-items-center py-2">
+        <Col md="8">
+          <Card className={styles.cardContainer}>
+            <Card.Body>
+              <div>
+                <Form className="p-1" onSubmit={onSubmitHandler}>
+                  <DropDown
+                    label="Hospital"
+                    items={HospitalData}
+                    setSelectedItem={setSelectHospital}
+                    selectedItem={selectHospital}
+                    setSelectedItemID={setSelectedHospitalId}
+                    isInvalid={!!medicalDiaryDataError.drainError}
+                    errorMsg={medicalDiaryDataError.drainError}
+                  />
+                  <Form.Group
+                    controlId="formBasicVolume"
+                    className={styles.formGroup}
+                  >
+                    <label>Other Hospital Name</label>
+                    <Form.Control
+                      type="text"
+                      name="otherHospitalName"
+                      placeholder="Other Hospital Name"
+                      value={medicalDiaryData.otherHospitalName ?? ""}
+                      onChange={handleInput}
+                      isInvalid={!!medicalDiaryDataError.volumeError}
+                      className={styles.formControl}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {medicalDiaryDataError.volumeError}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group
+                    controlId="formBasicWoundSize"
+                    className={styles.formGroup}
+                  >
+                    <Form.Label>Drain</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="drain"
+                      placeholder="Drain"
+                      value={medicalDiaryData.drain ?? ""}
+                      onChange={handleInput}
                       isInvalid={!!medicalDiaryDataError.drainError}
-                      errorMsg={medicalDiaryDataError.drainError}
+                      className={styles.formControl}
                     />
-                  </Col>
-                </Row>
-                <Row className="my-2">
-                  <Col xs={10} md="12">
-                    <DropDown
-                      label="Color"
-                      items={TempDrainData}
-                      selectedItem={selectColor}
-                      setSelectedItem={setSelectColor}
-                      isInvalid={!!medicalDiaryDataError.colorError}
-                      errorMsg={medicalDiaryDataError.colorError}
-                      setErrorMessage={setMedicalDiaryDataError}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md="12" xs={10}>
-                    <Form.Group
-                      controlId="formBasicVolume"
-                      className={styles.formGroup}
+                    <Form.Control.Feedback type="invalid">
+                      {medicalDiaryDataError.drainError}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <div className="mt-3 mb-2 d-flex justify-content-center">
+                    <Button
+                      className="btn-fill pull"
+                      type="submit"
+                      variant="success"
                     >
-                      <label>Volume</label>
-                      <Form.Control
-                        type="text"
-                        name="volume"
-                        placeholder="Volume"
-                        value={medicalDiaryData.volume ?? ""}
-                        onChange={handleInput}
-                        isInvalid={!!medicalDiaryDataError.volumeError}
-                        className={styles.formControl}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {medicalDiaryDataError.volumeError}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                  <Col md="12" xs={10} className="">
-                    <Form.Group
-                      controlId="formBasicWoundSize"
-                      className={[styles.formGroup] + " " + "ml-lg-2"}
-                    >
-                      <Form.Label>Wound Size</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="woundSize"
-                        placeholder="Wound Size"
-                        value={medicalDiaryData.woundSize ?? ""}
-                        onChange={handleInput}
-                        isInvalid={!!medicalDiaryDataError.woundSizeError}
-                        className={styles.formControl}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {medicalDiaryDataError.woundSizeError}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          </Col>
-          <Col md="4">
-            <Card
-              className="card-user"
-              style={{
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-            >
-              <Card.Body className={styles.imageCardBody}>
-                <input
-                  ref={imageInputRef}
-                  type="file"
-                  id="file"
-                  className="d-none"
-                  accept="image/*"
-                  onChange={onchangeImage}
-                />
-                <img
-                  alt="..."
-                  className="p-2 border-gray"
-                  src={require("assets/img/faces/face-3.jpg")}
-                />
-                <Button variant="outline-primary" onClick={onAddImage}>
-                  Add Image
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <div className="mt-3 mb-2 d-flex justify-content-center">
-          <Button
-            className="btn-fill pull"
-            type="submit"
-            variant="success"
-            onClick={onSubmitHandler}
-          >
-            Submit
-          </Button>
-        </div>
-      </Card>
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };

@@ -64,7 +64,7 @@ function Admin() {
   return (
     <>
       <div className="wrapper">
-        <Sidebar color={color} image={hasImage ? image : ""} routes={routes} />
+        <Sidebar color={color} image={hasImage ? image : ""} />
         <div className="main-panel" ref={mainPanel}>
           <AdminNavbar />
           <div className="content">

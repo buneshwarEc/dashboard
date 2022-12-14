@@ -87,6 +87,7 @@ export const loginAction = (data) => async (dispatch) => {
     dispatch(Login(res.data));
   } catch (err) {
     console.log("Login Error : ", err);
+    alert("You Have Entered Wrong Email or Password");
   }
 };
 

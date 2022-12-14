@@ -27,7 +27,7 @@ const User = createSlice({
     },
     HospitalData: (state, action) => {
       console.log("In Hospital Data : ", action.payload);
-      // state.HospitalData = action.payload;
+      state.HospitalData = action.payload;
     },
   },
 });

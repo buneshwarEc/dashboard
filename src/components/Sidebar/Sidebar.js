@@ -20,6 +20,7 @@ import { useLocation, NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 
 import styles from "./Sidebar.module.css";
+import { sideBarRoutes } from "routes";
 
 function Sidebar({ color, image, routes }) {
   const location = useLocation();
@@ -29,7 +30,12 @@ function Sidebar({ color, image, routes }) {
   return (
     <div className="sidebar" data-color={color}>
       <div className="sidebar-background" />
-      <div className={[styles.sidebarWrapper] + " sidebar-wrapper"}>
+      <div
+        className="sidebar-wrapper"
+        style={{
+          width: "280px",
+        }}
+      >
         <div className="logo">
           <div className={styles.logoContainer}>
             <img
@@ -44,28 +50,26 @@ function Sidebar({ color, image, routes }) {
           </div>
         </div>
         <Nav>
-          {routes.map((prop, key) => {
+          {sideBarRoutes.map((prop, key) => {
             if (!prop.redirect)
               return (
-                prop.name != "Create Testimonial" && (
-                  <li
-                    className={
-                      prop.upgrade
-                        ? "active active-pro"
-                        : activeRoute(prop.layout + prop.path)
-                    }
-                    key={key}
+                <li
+                  className={
+                    prop.upgrade
+                      ? "active active-pro"
+                      : activeRoute(prop.layout + prop.path)
+                  }
+                  key={key}
+                >
+                  <NavLink
+                    to={prop.layout + prop.path}
+                    className="nav-link"
+                    activeClassName="active"
                   >
-                    <NavLink
-                      to={prop.layout + prop.path}
-                      className="nav-link"
-                      activeClassName="active"
-                    >
-                      <i className={prop.icon} />
-                      <p>{prop.name}</p>
-                    </NavLink>
-                  </li>
-                )
+                    <i className={prop.icon} />
+                    <p>{prop.name}</p>
+                  </NavLink>
+                </li>
               );
             return null;
           })}
